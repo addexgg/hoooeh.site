@@ -132,34 +132,6 @@
     }
     .theme-toggle:hover{ transform:translateX(-50%) scale(1.03); background-color:#536fb1 }
 
-    /* 🎵 MUSIC BUTTON */
-    #musicToggle{
-        position:fixed;
-        bottom:20px;
-        right:20px;
-        background-color:var(--btn-bg);
-        color:var(--btn-text);
-        border:none;
-        padding:10px 15px;
-        font-size:20px;
-        font-family:'Roboto',sans-serif;
-        border-radius:12px;
-        cursor:pointer;
-        box-shadow:0 3px 8px rgba(0,0,0,.2);
-        transition:background-color .3s,transform .15s,box-shadow .15s;
-        z-index:1300;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        min-width:56px;
-        min-height:44px;
-    }
-    #musicToggle:hover{
-        background-color:#536fb1;
-        transform:scale(1.05);
-        box-shadow:0 5px 12px rgba(0,0,0,.3);
-    }
-
     @media(max-width:600px){
         .carousel{ width:200px }
         img{ width:200px;height:200px }
@@ -175,6 +147,27 @@
 
     <h2>hoooeh.site</h2>
     <p>Tu znajdziesz najlepsze źródła audio i mugshotów związanych z Hoooeh, incydentamy i HeySelcukiem</p>
+
+    <h3>Honorable Mentions</h3>
+    <div class="honorable-links">
+        <a href="https://www.amistech.com/mwc">My Winter Car</a>
+        <a href="https://www.tiktok.com/@heyselcuk.ai">HeySelcuk TikTok</a>
+        <a href="https://www.instagram.com/heyselcuk/">HeySelcuk Instagram</a>
+        <a href="https://www.counter-strike.net/cs2">Counter-Strike 2</a>
+        <a href="https://endnightgames.com">Endnight Games</a>
+        <a href="https://www.roblox.com/games/121856124460119/GTA-HS">Grand Theft Auto HS</a>
+        <a href="https://neonlights.ai">Neon Lights AI</a>
+    </div>
+
+    <h3>GitHub</h3>
+    <div class="honorable-links">
+        <a href="https://github.com/dumboncoding/hoooeh.site">hoooeh.site - GitHub</a>
+    </div>
+
+    <h3>Hooeh Clips ZIP</h3>
+    <div class="honorable-links">
+        <a href="https://drive.google.com/file/d/1c1hIRUFCfKTFzCtgW5lKWI9wqaclnZJq/view?usp=drive_link">Pobierz: Kwi-Sie 2025</a>
+    </div>
 
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
 </div>
@@ -200,13 +193,9 @@
         <a href="fullclip.mp3">OG Hoooeh Full Clip</a>
         <a href="epst.mp4">HeyEpstien</a>
         <a href="paroweczki.mp4">PKIC🥀</a>
-        <a href="hoehmix.mp3">Hooeh Mix v6</a>
+        <a href="hoehmix.mp3">Hoooeh Mix v6</a>
     </div>
 </div>
-
-<!-- 🎵 Music -->
-<audio id="bgMusic" src="site_theme.m4a" loop preload="auto"></audio>
-<button id="musicToggle">🎵1️⃣</button>
 
 <script>
 /* Sidebar toggle */
@@ -238,7 +227,7 @@ function toggleSidebar(){
     });
 })();
 
-/* Carousel (unchanged) */
+/* Carousel */
 const images = ['hstoje.gif','WPEx.jpg','epgif.gif','smash.gif'];
 let currentIndex = 0;
 const imgEl = document.getElementById('carouselImg');
@@ -248,10 +237,12 @@ const counterEl = document.getElementById('carouselCounter');
 const carouselEl = document.getElementById('carousel');
 
 function updateCounter(){ counterEl.textContent = (images.length ? (currentIndex+1) : 0) + ' / ' + images.length }
+
 function updateButtons(){
     if(images.length<=1){ prevBtn.style.display='none'; nextBtn.style.display='none'; counterEl.style.display = images.length ? 'block' : 'none' }
     else { prevBtn.style.display='flex'; nextBtn.style.display='flex'; counterEl.style.display='block' }
 }
+
 function applyAspectForImage(name){
     if(!name) return;
     if(/wpex\.jpe?g/i.test(name)){
@@ -262,6 +253,7 @@ function applyAspectForImage(name){
         carouselEl.classList.add('aspect-1-1');
     }
 }
+
 function showImage(index){
     if(!images.length) return;
     currentIndex = (index + images.length) % images.length;
@@ -274,20 +266,27 @@ function showImage(index){
         updateCounter();
     },160);
 }
+
 function prevImage(){ showImage(currentIndex-1) }
 function nextImage(){ showImage(currentIndex+1) }
+
 prevBtn.addEventListener('click', prevImage);
 nextBtn.addEventListener('click', nextImage);
+
 document.addEventListener('keydown',(e)=>{
     if(e.key==='ArrowLeft') prevImage();
     if(e.key==='ArrowRight') nextImage();
 });
+
+/* touch/swipe */
 (function(){
     let startX = 0;
     const track = document.getElementById('carouselTrack');
     track.addEventListener('touchstart',(e)=>{ startX = e.touches[0].clientX },{passive:true});
     track.addEventListener('touchend',(e)=>{ const endX = e.changedTouches[0].clientX; const diff = endX - startX; if(Math.abs(diff) > 40){ if(diff>0) prevImage(); else nextImage() } });
 })();
+
+/* init */
 updateButtons();
 if(images.length){
     applyAspectForImage(images[0]);
@@ -297,49 +296,6 @@ if(images.length){
     imgEl.style.display = 'none';
     counterEl.style.display = 'none';
 }
-
-/* 🎵 Background Music Script */
-(function(){
-    const audio = document.getElementById('bgMusic');
-    const button = document.getElementById('musicToggle');
-
-    const levels = [
-        {volume:1, icon:'🎵3️⃣'},
-        {volume:0.5, icon:'🎵2️⃣'},
-        {volume:0.2, icon:'🎵1️⃣'},
-        {volume:0, icon:'🎵🚫'}
-    ];
-
-    let idx = 2; // start 20%
-
-    try{
-        const saved = localStorage.getItem('music-volume');
-        if(saved!==null) idx = Number(saved);
-    }catch(e){}
-
-    function apply(){
-        audio.volume = levels[idx].volume;
-        button.textContent = levels[idx].icon;
-        try{ localStorage.setItem('music-volume', idx); }catch(e){}
-    }
-
-    button.addEventListener('click', ()=>{
-        idx = (idx+1) % levels.length;
-        apply();
-        if(audio.volume>0 && audio.paused) audio.play().catch(()=>{});
-    });
-
-    const unlock = ()=>{
-        if(audio.volume>0 && audio.paused) audio.play().catch(()=>{});
-        document.removeEventListener('click', unlock);
-        document.removeEventListener('keydown', unlock);
-    };
-
-    document.addEventListener('click', unlock);
-    document.addEventListener('keydown', unlock);
-
-    apply();
-})();
 </script>
 </body>
 </html>
