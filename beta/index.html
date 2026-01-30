@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>incydenty.site (BETA)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --bg:#010409;
+        --text:#ffffff;
+        --sidebar-bg:#0d1117;
+        --btn-bg:#78a0fe;
+        --btn-text:#000000;
+    }
+    body.light{
+        --bg:#ffffff;
+        --text:#000000;
+        --sidebar-bg:#e8e8ff;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+        font-family: 'Google Sans', sans-serif;
+        background-color:var(--bg);
+        color:var(--text);
+        display:flex;
+        min-height:100vh;
+        transition:background-color .25s,color .25s,margin-left .3s;
+    }
+
+    /* Sidebar */
+    .sidebar{
+        height:100vh;
+        width:0;
+        position:fixed;
+        top:0;
+        left:0;
+        background-color:var(--sidebar-bg);
+        overflow-x:hidden;
+        transition:width .3s,background-color .25s;
+        padding-top:60px;
+        box-shadow:2px 0 10px rgba(0,0,0,.2);
+        border-radius:0 20px 20px 0;
+        z-index:1000;
+    }
+    .sidebar.open{width:250px}
+    .sidebar h2{ text-align:center;margin-bottom:20px;font-weight:700;color:var(--text) }
+    .sidebar p{ padding:0 20px;font-size:14px;line-height:1.5;color:var(--text) }
+    .sidebar h3{ text-align:center;margin-top:30px;color:var(--text);font-weight:700 }
+
+    .honorable-links{ display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:10px }
+    .honorable-links a{
+        text-decoration:none;
+        background-color:var(--btn-bg);
+        color:var(--text);
+        padding:12px 25px;
+        border-radius:20px;
+        font-weight:500;
+        width:200px;
+        text-align:center;
+        box-shadow:0 3px 8px rgba(0,0,0,.3);
+        transition:background-color .3s,transform .2s;
+        color:var(--btn-text);
+    }
+    .honorable-links a:hover{ background-color:#536fb1; transform:translateY(-2px) }
+
+    .close-btn{ position:absolute;top:15px;right:15px;font-size:25px;cursor:pointer;color:#000000 }
+
+    /* Main */
+    .main-content{ flex:1;margin-left:0;padding:40px 20px;transition:margin-left .3s }
+    body.sidebar-open .main-content{ margin-left:250px }
+    h1{ color:var(--text);font-weight:700;margin-bottom:40px;text-align:center }
+
+    /* images */
+    img{ width:300px;height:300px;object-fit:cover;border-radius:20px;box-shadow:0 5px 15px rgba(0,0,0,.3);transition:transform .3s;display:block;margin:0 auto 40px auto }
+    img:hover{ transform:scale(1.05) }
+
+    /* carousel */
+    .carousel{
+        position:relative;
+        width:300px;
+        aspect-ratio:1/1;
+        margin:0 auto 40px auto;
+        overflow:hidden;
+        border-radius:20px;
+        box-shadow:0 5px 15px rgba(0,0,0,.3);
+        background:#0b0d0f;
+    }
+    .carousel.aspect-16-9{ aspect-ratio:16/9 }
+    .carousel-track{ width:100%;height:100%;display:flex;align-items:center;justify-content:center }
+    .carousel-img{ width:100%;height:100%;object-fit:cover;transition:opacity .35s ease,transform .35s ease;opacity:1;display:block;border-radius:0 }
+
+    .carousel-btn{
+        position:absolute;top:50%;transform:translateY(-50%);
+        background:rgba(255,255,255,.08);color:var(--text);border:none;
+        width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;
+        align-items:center;justify-content:center;font-size:26px;z-index:1200;
+        transition:transform .15s,background .15s;box-shadow:0 3px 8px rgba(0,0,0,.25)
+    }
+    .carousel-btn.left{ left:10px } .carousel-btn.right{ right:10px }
+    .carousel-btn:hover{ background:rgba(255,255,255,.14);transform:translateY(-50%) scale(1.05) }
+
+    .carousel-counter{
+        position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+        background:rgba(0,0,0,.35);padding:6px 10px;border-radius:12px;font-size:13px;color:#fff;z-index:1200
+    }
+
+    /* file links */
+    .subpages{ margin-top:20px;display:flex;flex-direction:column;gap:15px;align-items:center }
+    .subpages a{
+        text-decoration:none;background-color:var(--btn-bg);color:var(--btn-text);
+        padding:12px 25px;border-radius:20px;font-weight:500;transition:background-color .3s,transform .2s;
+        box-shadow:0 3px 8px rgba(0,0,0,.3);width:220px;text-align:center;
+    }
+    .subpages a:hover{ background-color:#536fb1; transform:translateY(-2px) }
+
+    .sidebar-toggle{
+        position:fixed;top:20px;left:20px;background-color:var(--btn-bg);color:var(--btn-text);
+        border:none;padding:10px 15px;font-size:16px;border-radius:12px;cursor:pointer;
+        box-shadow:0 3px 8px rgba(0,0,0,.2);transition:background-color .3s;z-index:1100;
+    }
+    .sidebar-toggle:hover{ background-color:#536fb1 }
+
+    /* theme toggle bottom of sidebar */
+    .theme-toggle{
+        position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+        background-color:var(--btn-bg);color:var(--btn-text);border:none;
+        padding:8px 12px;font-size:20px;border-radius:12px;cursor:pointer;
+        box-shadow:0 3px 8px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;
+        width:64px;height:44px;z-index:1200;
+    }
+    .theme-toggle:hover{ transform:translateX(-50%) scale(1.03); background-color:#536fb1 }
+
+    @media(max-width:600px){
+        .carousel{ width:200px }
+        img{ width:200px;height:200px }
+        .subpages a,.honorable-links a{ width:150px }
+    }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">&times;</span>
+
+    <h2>incydenty.site (BETA)</h2>
+    <h3>UWAGA! TO jest strona beta która ulega zmianie bardzo często lub może się zepsuć! Zalecane jest przejście do głównej strony w sekcji GitHub.</h3>
+    <p>Tu znajdziesz najlepsze źródła audio i mugshotów związanych z Hoooeh, incydentamy i HeySelcukiem</p>
+
+    <h3>Honorable Mentions</h3>
+    <div class="honorable-links">
+        <a href="https://www.amistech.com/mwc">My Winter Car</a>
+        <a href="https://www.tiktok.com/@heyselcuk.ai">HeySelcuk TikTok</a>
+        <a href="https://www.instagram.com/heyselcuk/">HeySelcuk Instagram</a>
+        <a href="https://www.counter-strike.net/cs2">Counter-Strike 2</a>
+        <a href="https://endnightgames.com">Endnight Games</a>
+        <a href="https://www.roblox.com/games/121856124460119/GTA-HS">Grand Theft Auto HS</a>
+        <a href="https://neonlights.ai">Neon Lights AI</a>
+    </div>
+
+    <h3>GitHub</h3>
+    <div class="honorable-links">
+        <a href="https://github.com/addexgg/incydenty.site">incydenty.site - GitHub</a>
+    </div>
+
+    <h3>Hooeh Clips ZIP</h3>
+    <div class="honorable-links">
+        <a href="https://drive.google.com/file/d/1c1hIRUFCfKTFzCtgW5lKWI9wqaclnZJq/view?usp=drive_link">Pobierz: Kwi-Sie 2025</a>
+    </div>
+
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+</div>
+
+<!-- Main content -->
+<div class="main-content">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <h1>incydenty.site</h1>
+
+    <div id="carousel" class="carousel aspect-1-1" aria-live="polite">
+        <button class="carousel-btn left" id="prevBtn" aria-label="Previous image">‹</button>
+        <div class="carousel-track" id="carouselTrack">
+            <img id="carouselImg" class="carousel-img" src="hstoje.gif" alt="carousel image">
+        </div>
+        <button class="carousel-btn right" id="nextBtn" aria-label="Next image">›</button>
+        <div class="carousel-counter" id="carouselCounter">1 / 1</div>
+    </div>
+
+    <div class="subpages">
+        <a href="./heyselcuk">Incydenty Heyselcuk</a>
+        <a href="./hoooeh">Incydenty Hoooeh</a>
+        <a href="./other">Inne Incydenty</a>
+    </div>
+</div>
+
+<script>
+/* Sidebar toggle */
+const sidebar = document.getElementById('sidebar');
+const body = document.body;
+function toggleSidebar(){
+    sidebar.classList.toggle('open');
+    body.classList.toggle('sidebar-open');
+}
+
+/* Theme toggle logic */
+(function(){
+    const themeToggle = document.getElementById('themeToggle');
+    function setTheme(t){
+        if(t==='light'){ document.body.classList.add('light'); themeToggle.textContent='☀️' }
+        else { document.body.classList.remove('light'); themeToggle.textContent='🌙' }
+        try{ localStorage.setItem('site-theme', t) }catch(e){}
+    }
+    try{
+        const saved = localStorage.getItem('site-theme');
+        if(saved) setTheme(saved);
+        else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) setTheme('light');
+        else setTheme('dark');
+    }catch(e){ setTheme('dark') }
+
+    themeToggle.addEventListener('click', ()=>{
+        const isLight = document.body.classList.contains('light');
+        setTheme(isLight ? 'dark' : 'light');
+    });
+})();
+
+/* Carousel */
+const images = ['hstoje.gif', 'bpp.GIF', 'WPEx.jpg','epgif.gif','smash.gif'];
+let currentIndex = 0;
+const imgEl = document.getElementById('carouselImg');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const counterEl = document.getElementById('carouselCounter');
+const carouselEl = document.getElementById('carousel');
+
+function updateCounter(){ counterEl.textContent = (images.length ? (currentIndex+1) : 0) + ' / ' + images.length }
+
+function updateButtons(){
+    if(images.length<=1){ prevBtn.style.display='none'; nextBtn.style.display='none'; counterEl.style.display = images.length ? 'block' : 'none' }
+    else { prevBtn.style.display='flex'; nextBtn.style.display='flex'; counterEl.style.display='block' }
+}
+
+function applyAspectForImage(name){
+    if(!name) return;
+    if(/wpex\.jpe?g/i.test(name)){
+        carouselEl.classList.remove('aspect-1-1');
+        carouselEl.classList.add('aspect-16-9');
+    } else {
+        carouselEl.classList.remove('aspect-16-9');
+        carouselEl.classList.add('aspect-1-1');
+    }
+}
+
+function showImage(index){
+    if(!images.length) return;
+    currentIndex = (index + images.length) % images.length;
+    const name = images[currentIndex];
+    applyAspectForImage(name);
+    imgEl.style.opacity = 0;
+    setTimeout(()=>{
+        imgEl.src = name;
+        imgEl.onload = ()=>{ imgEl.style.opacity = 1 };
+        updateCounter();
+    },160);
+}
+
+function prevImage(){ showImage(currentIndex-1) }
+function nextImage(){ showImage(currentIndex+1) }
+
+prevBtn.addEventListener('click', prevImage);
+nextBtn.addEventListener('click', nextImage);
+
+document.addEventListener('keydown',(e)=>{
+    if(e.key==='ArrowLeft') prevImage();
+    if(e.key==='ArrowRight') nextImage();
+});
+
+/* touch/swipe */
+(function(){
+    let startX = 0;
+    const track = document.getElementById('carouselTrack');
+    track.addEventListener('touchstart',(e)=>{ startX = e.touches[0].clientX },{passive:true});
+    track.addEventListener('touchend',(e)=>{ const endX = e.changedTouches[0].clientX; const diff = endX - startX; if(Math.abs(diff) > 40){ if(diff>0) prevImage(); else nextImage() } });
+})();
+
+/* init */
+updateButtons();
+if(images.length){
+    applyAspectForImage(images[0]);
+    imgEl.src = images[0];
+    updateCounter();
+} else {
+    imgEl.style.display = 'none';
+    counterEl.style.display = 'none';
+}
+</script>
+</body>
+</html>
