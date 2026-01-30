@@ -88,25 +88,6 @@
         border-radius:20px;
         box-shadow:0 5px 15px rgba(0,0,0,.3);
         background:#0b0d0f;
-    }
-    .carousel.aspect-16-9{ aspect-ratio:16/9 }
-    .carousel-track{ width:100%;height:100%;display:flex;align-items:center;justify-content:center }
-    .carousel-img{ width:100%;height:100%;object-fit:cover;transition:opacity .35s ease,transform .35s ease;opacity:1;display:block;border-radius:0 }
-
-    .carousel-btn{
-        position:absolute;top:50%;transform:translateY(-50%);
-        background:rgba(255,255,255,.08);color:var(--text);border:none;
-        width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;
-        align-items:center;justify-content:center;font-size:26px;z-index:1200;
-        transition:transform .15s,background .15s;box-shadow:0 3px 8px rgba(0,0,0,.25)
-    }
-    .carousel-btn.left{ left:10px } .carousel-btn.right{ right:10px }
-    .carousel-btn:hover{ background:rgba(255,255,255,.14);transform:translateY(-50%) scale(1.05) }
-
-    .carousel-counter{
-        position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-        background:rgba(0,0,0,.35);padding:6px 10px;border-radius:12px;font-size:13px;color:#fff;z-index:1200
-    }
 
     /* file links */
     .subpages{ margin-top:20px;display:flex;flex-direction:column;gap:15px;align-items:center }
@@ -180,15 +161,6 @@
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
     <h1>incydenty.site</h1>
-
-    <div id="carousel" class="carousel aspect-1-1" aria-live="polite">
-        <button class="carousel-btn left" id="prevBtn" aria-label="Previous image">‹</button>
-        <div class="carousel-track" id="carouselTrack">
-            <img id="carouselImg" class="carousel-img" src="hstoje.gif" alt="carousel image">
-        </div>
-        <button class="carousel-btn right" id="nextBtn" aria-label="Next image">›</button>
-        <div class="carousel-counter" id="carouselCounter">1 / 1</div>
-    </div>
 
     <div class="subpages">
         <a href="./heyselcuk">Incydenty Heyselcuk</a>
